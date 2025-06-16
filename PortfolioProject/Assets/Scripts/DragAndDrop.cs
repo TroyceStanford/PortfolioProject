@@ -5,44 +5,102 @@ using UnityEngine.EventSystems;
 
 public class DragAndDrop : MonoBehaviour
 {
+    public Item _Item;
+    public Money _Money;
+    public bool _Dragging = false;
+    public bool _Slotted = false;
     public Vector3 _MousePos;
-    public GameObject _DropSlot = null;
-    private Rigidbody _Rigidbody;
+    public DropSlot _DropSlot = null;
+    public Rigidbody _Rigidbody;
 
     private void Start()
     {
+        _Money = FindFirstObjectByType<Money>();
         _Rigidbody = this.gameObject.GetComponent<Rigidbody>();
+        _Item = Instantiate(_Item);
     }
 
-    private Vector3 GetMousePos()
+    public Vector3 GetMousePos()
     {
         return Camera.main.WorldToScreenPoint(transform.position);
     }
 
     private void OnMouseDown()
     {
-        _Rigidbody.useGravity = true;
-        _MousePos = Input.mousePosition - GetMousePos();
+        Rigidbody rigidbody = this.gameObject.GetComponent<Rigidbody>();
+        rigidbody.isKinematic = false;
+
+        if (_DropSlot != null)
+        {
+            _DropSlot._DragAndDrop = null;
+            _DropSlot = null;
+        }
+
+        _DropSlot = null;
+
+        if (_Item._InShop == true)
+        {
+            if(_Item._Value <= _Money._Money)
+            {
+                _Money.Buy(_Item);
+                _Dragging = true;
+                _Slotted = false;
+                _Rigidbody.useGravity = true;
+                _MousePos = Input.mousePosition - GetMousePos();
+            }
+            else
+            {
+                StartCoroutine(_Money.CanNotAfford());
+            }
+        }
+        else
+        {
+            _Dragging = true;
+            _Slotted = false;
+            _Rigidbody.useGravity = true;
+            _MousePos = Input.mousePosition - GetMousePos();
+        }
+
+
     }
 
     private void OnMouseDrag()
     {
-        transform.position =  Camera.main.ScreenToWorldPoint(Input.mousePosition - _MousePos);
+        if(_Dragging == true)
+        {
+            transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition - _MousePos);
+        }
     }
 
     private void OnMouseUp() 
     {
-        if(_DropSlot != null) 
+        if(_Dragging == true)
         {
-            _Rigidbody.useGravity = false;
-            _Rigidbody.linearVelocity = Vector3.zero;
-            _Rigidbody.angularVelocity = Vector3.zero;
-            transform.position = _DropSlot.transform.position;
-            transform.rotation = _DropSlot.transform.rotation;
+            _Dragging = false;
+
+            if (_DropSlot != null)
+            {
+                SlotIn();
+            }
+            else
+            {
+                _Rigidbody.useGravity = true;
+                _Rigidbody.linearVelocity = Vector3.zero;
+                _Rigidbody.angularVelocity = Vector3.zero;
+            }
         }
-        else
-        {
-            _Rigidbody.useGravity = true;
-        }
+    }
+
+    public void SlotIn()
+    {
+        _DropSlot._DragAndDrop = this;
+        _Slotted = true;
+        _Rigidbody.useGravity = false;
+        _Rigidbody.linearVelocity = Vector3.zero;
+        _Rigidbody.angularVelocity = Vector3.zero;
+        transform.position = _DropSlot.gameObject.transform.position;
+        transform.rotation = _DropSlot.gameObject.transform.rotation;
+        Rigidbody rigidbody = this.gameObject.GetComponent<Rigidbody>();
+        rigidbody.isKinematic = true;
     }
 }

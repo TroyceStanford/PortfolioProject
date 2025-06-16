@@ -2,12 +2,15 @@ using UnityEngine;
 
 public class DropSlot : MonoBehaviour
 {
+    public DragAndDrop _DragAndDrop;
+
     private void OnTriggerEnter(Collider other)
     {
-        if(other.GetComponent<DragAndDrop>() != null) 
+        if(other.GetComponent<DragAndDrop>() != null && _DragAndDrop == null) 
         {
             DragAndDrop dragAndDrop = other.GetComponent<DragAndDrop>();
-            dragAndDrop._DropSlot = this.gameObject;
+            dragAndDrop._DropSlot = this;
+            _DragAndDrop = dragAndDrop; 
         }
     }
 
@@ -16,7 +19,15 @@ public class DropSlot : MonoBehaviour
         if (other.GetComponent<DragAndDrop>() != null)
         {
             DragAndDrop dragAndDrop = other.GetComponent<DragAndDrop>();
-            dragAndDrop._DropSlot = null;
+            if(dragAndDrop._DropSlot == this)
+            {
+                dragAndDrop._DropSlot = null;
+            }
+
+            if(_DragAndDrop == dragAndDrop)
+            {
+                _DragAndDrop = null;
+            }
         }
     }
 }
