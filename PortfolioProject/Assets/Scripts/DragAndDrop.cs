@@ -7,22 +7,33 @@ public class DragAndDrop : MonoBehaviour
 {
     public Item _Item;
     public Money _Money;
+    public SwapCameras _SwapCameras;
     public bool _Dragging = false;
     public bool _Slotted = false;
     public Vector3 _MousePos;
     public DropSlot _DropSlot = null;
     public Rigidbody _Rigidbody;
+    public Camera _Camera;
 
     private void Start()
     {
         _Money = FindFirstObjectByType<Money>();
+        _SwapCameras = FindFirstObjectByType<SwapCameras>();
         _Rigidbody = this.gameObject.GetComponent<Rigidbody>();
         _Item = Instantiate(_Item);
     }
 
+    public void Update()
+    {
+        if(_Camera != _SwapCameras._Cameras[_SwapCameras._ActiveCamera]._Camera) 
+        {
+            _Camera = _SwapCameras._Cameras[_SwapCameras._ActiveCamera]._Camera.GetComponent<Camera>();
+        }
+    }
+
     public Vector3 GetMousePos()
     {
-        return Camera.main.WorldToScreenPoint(transform.position);
+        return _Camera.WorldToScreenPoint(transform.position);
     }
 
     private void OnMouseDown()
@@ -68,7 +79,7 @@ public class DragAndDrop : MonoBehaviour
     {
         if(_Dragging == true)
         {
-            transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition - _MousePos);
+            transform.position = _Camera.ScreenToWorldPoint(Input.mousePosition - _MousePos);
         }
     }
 
