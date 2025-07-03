@@ -5,6 +5,7 @@ using UnityEngine;
 public enum Type
 {
     Ore,
+    Fuel,
     Other
 }
 public abstract class Item : ScriptableObject
