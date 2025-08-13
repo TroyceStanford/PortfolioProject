@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Item/CopperOre", fileName = "CopperOre.asset")]
+[CreateAssetMenu(menuName = "Item/Copper/CopperOre", fileName = "CopperOre.asset")]
 public class CopperOre : Item
 {
     private void Awake()

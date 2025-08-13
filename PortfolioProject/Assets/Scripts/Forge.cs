@@ -4,6 +4,7 @@ public class Forge : MonoBehaviour
 {
     public bool _Heated;
     public DropSlot _DropSlot;
+    public Smithing _Smithing;
 
     void Start()
     {
@@ -15,14 +16,24 @@ public class Forge : MonoBehaviour
     {
         if(_Heated == false && _DropSlot._DragAndDrop != null)
         {
-            Smithing smithing = _DropSlot._DragAndDrop.GetComponent<Smithing>();
-            smithing.Heat();
-            _Heated = true;
+            _Smithing = _DropSlot._DragAndDrop.GetComponent<Smithing>();
+            _Smithing.Heat();
+            _Smithing._Heating = true;
+
+            if(_Smithing._Heat >= 10)
+            {
+                _Heated = true;
+            }
         }
 
-        if(_Heated == true &&  _DropSlot._DragAndDrop == null)
+        if(_DropSlot._DragAndDrop == null)
         {
             _Heated = false;
+            if(_Smithing != null)
+            {
+                _Smithing._Heating = false;
+                _Smithing = null;
+            }
         }
     }
 }

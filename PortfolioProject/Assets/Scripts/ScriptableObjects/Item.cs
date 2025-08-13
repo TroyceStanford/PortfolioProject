@@ -6,6 +6,8 @@ public enum Type
 {
     Ore,
     Fuel,
+    Metal,
+    Sword,
     Other
 }
 public abstract class Item : ScriptableObject
