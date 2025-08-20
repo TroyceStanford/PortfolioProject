@@ -18,6 +18,11 @@ public class SwapCameras : MonoBehaviour
     public int _Shop = 0;
     public int _Storage = 1;
     public Storage _StorageBox;
+    public GameObject _Left;
+    public GameObject _Right;
+    public GameObject _Up;
+    public GameObject _Down;
+
 
     void Start()
     {
@@ -25,7 +30,7 @@ public class SwapCameras : MonoBehaviour
         {
             cam._Camera.SetActive(false);
         }
-        _ActiveCamera = 0;
+        _ActiveCamera = 22;
         _Cameras[_ActiveCamera]._Camera.SetActive(true);
     }
 
@@ -51,7 +56,23 @@ public class SwapCameras : MonoBehaviour
 
     public void RightButton()
     {
-        Switch(1);
+        Switch(_Cameras[_ActiveCamera]._RoomRight);
+    }
+
+    public void LeftButton()
+    {
+        Switch(_Cameras[_ActiveCamera]._RoomLeft);
+    }
+
+    public void UpButton()
+    {
+        Switch(_Cameras[_ActiveCamera]._RoomUp);
+    }
+
+
+    public void DownButton()
+    {
+        Switch(_Cameras[_ActiveCamera]._RoomDown);
     }
 
     public void Switch(int i)
@@ -74,6 +95,42 @@ public class SwapCameras : MonoBehaviour
             _ActiveCamera = i;
             _Cameras[_ActiveCamera]._Camera.SetActive(true);
             _Cameras[n]._Camera.SetActive(false);
+
+            if (_Cameras[_ActiveCamera]._RoomRight != -1)
+            {
+                _Right.SetActive(true);
+            }
+            else
+            {
+                _Right.SetActive(false);
+            }
+
+            if (_Cameras[_ActiveCamera]._RoomLeft != -1)
+            {
+                _Left.SetActive(true);
+            }
+            else
+            {
+                _Left.SetActive(false);
+            }
+
+            if (_Cameras[_ActiveCamera]._RoomUp != -1)
+            {
+                _Up.SetActive(true);
+            }
+            else
+            {
+                _Up.SetActive(false);
+            }
+
+            if (_Cameras[_ActiveCamera]._RoomDown != -1)
+            {
+                _Down.SetActive(true);
+            }
+            else
+            {
+                _Down.SetActive(false);
+            }
         }
     }
 }

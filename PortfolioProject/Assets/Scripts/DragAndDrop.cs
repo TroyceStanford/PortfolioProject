@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -15,6 +16,7 @@ public class DragAndDrop : MonoBehaviour
     public Rigidbody _Rigidbody;
     public Camera _Camera;
     public Tools _Tools;
+    private float _Z;
     
     private void Start()
     {
@@ -23,6 +25,7 @@ public class DragAndDrop : MonoBehaviour
         _SwapCameras = FindFirstObjectByType<SwapCameras>();
         _Rigidbody = this.gameObject.GetComponent<Rigidbody>();
         _Item = Instantiate(_Item);
+        _Z = 0;
     }
 
     public void Update()
@@ -69,7 +72,7 @@ public class DragAndDrop : MonoBehaviour
                     _Money.Buy(_Item);
                     _Dragging = true;
                     _Slotted = false;
-                    _Rigidbody.useGravity = true;
+                    _Rigidbody.useGravity = false;
                     _MousePos = Input.mousePosition - GetMousePos();
                 }
                 else
@@ -81,7 +84,7 @@ public class DragAndDrop : MonoBehaviour
             {
                 _Dragging = true;
                 _Slotted = false;
-                _Rigidbody.useGravity = true;
+                _Rigidbody.useGravity = false;
                 _MousePos = Input.mousePosition - GetMousePos();
             }
         }
@@ -99,7 +102,17 @@ public class DragAndDrop : MonoBehaviour
     {
         if(_Dragging == true)
         {
-            transform.position = _Camera.ScreenToWorldPoint(Input.mousePosition - _MousePos);
+            _Z += Input.GetAxis("Mouse ScrollWheel");
+            //float speed = 50;
+            //Vector3 pos = _Camera.ScreenToWorldPoint(Input.mousePosition - _MousePos);
+            //Vector3 target = new Vector3(pos.x, pos.y, pos.z + _Z);
+            //transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
+            //_Rigidbody.linearVelocity = pos;
+            //_Rigidbody.MovePosition(target);
+
+            Vector3 pos = _Camera.ScreenToWorldPoint(Input.mousePosition - _MousePos);
+            pos.z += _Z;
+            _Rigidbody.linearVelocity = (pos - transform.position) * 20;
         }
     }
 

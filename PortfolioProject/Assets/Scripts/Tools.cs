@@ -10,7 +10,10 @@ public class Tools : MonoBehaviour
     
     void Start()
     {
-        
+        _Hammer = false;
+        //_HammerHand.SetActive(false);
+        _Hand = true;
+        //_EmptyHand.SetActive(true);
     }
 
 
